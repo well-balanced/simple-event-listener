@@ -1,4 +1,5 @@
 import { IsEnum, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum EventType {
   REVIEW = 'REVIEW',
@@ -7,9 +8,18 @@ export enum EventType {
 
 export class Event {
   @IsEnum(EventType)
+  @ApiProperty({
+    example: 'REVIEW',
+    description: '이벤트 타입',
+    enum: EventType,
+  })
   type: EventType;
 
   @IsString()
+  @ApiProperty({
+    example: 'ADD',
+    description: '행위',
+  })
   action: any;
 }
 
