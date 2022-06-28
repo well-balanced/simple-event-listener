@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'prisma.service';
-import { ReviewEvent } from '../event/types';
+import { ReviewEvent } from 'event/types';
 import { Review } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 

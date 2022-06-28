@@ -2,8 +2,8 @@ import { EventController } from 'event/event.controller';
 import { EventService } from 'event/event.service';
 import { ReviewService } from 'review/review.service';
 import { PrismaService } from 'prisma.service';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
+import { UserService } from 'user/user.service';
+import { UserController } from 'user/user.controller';
 import { v4 as uuidv4 } from 'uuid';
 import { EventType } from 'event/types';
 

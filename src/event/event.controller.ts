@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { ReviewService } from 'review/review.service';
-import { EventService } from './event.service';
-import { Event } from './types';
+import { EventService } from 'event/event.service';
+import { Event } from 'event/types';
 
 @Controller()
 export class EventController {
