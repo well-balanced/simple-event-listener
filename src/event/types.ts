@@ -15,7 +15,7 @@ export class Event {
 
 type ReviewEventAction = 'ADD' | 'MOD' | 'DELETE';
 
-export class ReviewEvent {
+export interface ReviewEvent {
   type: EventType.REVIEW;
   action: ReviewEventAction;
   reviewId: string;
