@@ -1,6 +1,6 @@
 # simple event listener
 
-간단한 이벤트 리스너 서버입니다.
+간단한 이벤트 리스너 서버입니다. 테이블 DDL은 [여기](https://github.com/well-balanced/simple-event-listener/blob/main/prisma/migrations/20220628114322_/migration.sql)에서 확인해주세요.
 
 ## 💡 Tech stack
 
