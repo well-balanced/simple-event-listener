@@ -79,6 +79,7 @@ async function queryTime<T>(
 
 async function main() {
   const argv = process.argv.slice(2);
+
   if (argv.includes('--seedReviews')) {
     /**
      * 리뷰 만개 시드 데이터 생성
@@ -92,10 +93,11 @@ async function main() {
      */
     const user = await prisma.user.findFirst({ orderBy: { id: 'desc' } });
     const fn = () =>
-      prisma.review.count({
+      prisma.pointLog.findMany({
         where: { userId: user?.externalId },
       });
-    await queryTime(fn);
+    const [result] = await queryTime(fn);
+    console.log(`found ${result.length} logs ✅`);
   }
 
   console.log('seed success ✅');
