@@ -35,3 +35,5 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # 현재 .env 파일에는 민감한 정보가 없기 때문에 추가하지 않음
+
+data
