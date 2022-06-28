@@ -6,6 +6,39 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model PointLog {
+  id      Int    @id @default(autoincrement())
+  amount  Int
+  message String
+
+  user   User   @relation(fields: [userId], references: [externalId])
+  userId String
+}
+
+model User {
+  id         Int    @id @default(autoincrement())
+  externalId String @unique
+  point      Int    @default(0)
+
+  Review   Review[]
+  PointLog PointLog[]
+}
+
+model Review {
+  id         Int     @id @default(autoincrement())
+  externalId String  @unique
+  content    String?
+  hasPhoto   Boolean
+  deleted    Boolean @default(false)
+  placeId    String?
+  rewarded   Int
+
+  user   User   @relation(fields: [userId], references: [externalId])
+  userId String
+
+  @@index([placeId])
 }
