@@ -13,6 +13,9 @@ export class UserController {
 
   @Get('/:userId/point-logs')
   async getPointLogs(@Param('userId') userId: string) {
+    /**
+     * TODO: pagination
+     */
     const logs = await this.userService.getPointLogs(userId);
     return { logs };
   }
