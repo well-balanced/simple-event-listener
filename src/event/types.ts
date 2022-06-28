@@ -30,7 +30,7 @@ export interface ReviewEvent {
   action: ReviewEventAction;
   reviewId: string;
   userId: string;
-  content?: string;
+  content: string;
   attachedPhotoIds?: string[];
   placeId?: string;
 }

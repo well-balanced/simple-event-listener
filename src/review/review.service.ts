@@ -52,10 +52,8 @@ export class ReviewService {
   }
 
   async handleAddEvent(event: ReviewEvent) {
-    if (!event.content || !event.placeId) {
-      throw new BadRequestException(
-        'Add event must include content and placeId',
-      );
+    if (!event.placeId) {
+      throw new BadRequestException('Add event must include placeId');
     }
 
     const operators = await this._getAddEventOperators(event);
