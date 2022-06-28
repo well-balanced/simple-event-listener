@@ -22,6 +22,7 @@ $ npm run prisma:gen && npm run migrate:dev
 $ npm run start:dev
 ```
 
+
 ## ✅ Test
 
 ```sh
@@ -39,6 +40,12 @@ $ npm run test:e2e
 
 ```sh
 $ npm run test:cov
+```
+
+### Seed 데이터 생성 및 조회 테스트
+
+```sh
+$ npm run prisma:seed -- --seedReviews --findLogs
 ```
 
 ## 🗄 ERD diagram
