@@ -1,8 +1,8 @@
 {
   "name": "simple-event-listener",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "simple-event-listener",
+  "author": "well-balanced",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -43,6 +43,7 @@
     "@types/jest": "27.5.0",
     "@types/node": "^16.0.0",
     "@types/supertest": "^2.0.11",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.0.1",
@@ -65,8 +66,12 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "rootDir": "./",
+    "moduleDirectories": [
+      "node_modules",
+      "<rootDir>/src"
+    ],
+    "testRegex": ".*.(e2e-)?spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
