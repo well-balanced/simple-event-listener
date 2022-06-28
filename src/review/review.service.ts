@@ -6,45 +6,13 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'prisma.service';
 import { ReviewEvent } from 'event/types';
-import { Review } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-
-const _prismaErrorCodeMap = {
-  P2002: 'Unique constraint failed',
-} as const;
-
-interface CreateReviewInput {
-  id: string;
-  message: string;
-  content: string;
-  hasPhoto: boolean;
-  userId: string;
-  placeId: string;
-  point: number;
-}
-
-interface UpdateReviewInput {
-  id: string;
-  message: string;
-  content?: string;
-  hasPhoto?: boolean;
-  pointDelta: number;
-  userId: string;
-}
-
-enum ReviewPointOperator {
-  ContentAdded,
-  ContentDeleted,
-  PhotoAdded,
-  PhotoDeleted,
-  LocationBonus,
-  LocationBonusRetrieved,
-}
-
-interface GetModOperatorsInput {
-  event: ReviewEvent;
-  lastReview: Review;
-}
+import { ReviewPointOperator } from 'review/types';
+import {
+  CreateReviewInput,
+  UpdateReviewInput,
+  GetModOperatorsInput,
+} from 'review/review.interface';
 
 @Injectable()
 export class ReviewService {
@@ -129,13 +97,68 @@ export class ReviewService {
     await this.deleteReview(event.reviewId);
   }
 
+  async findById(id: string) {
+    return await this.prisma.review.findUnique({ where: { externalId: id } });
+  }
+
+  async createReview({
+    id,
+    message,
+    content,
+    hasPhoto,
+    userId,
+    placeId,
+    point,
+  }: CreateReviewInput) {
+    const createUserOperation = this.prisma.review.create({
+      data: {
+        externalId: id,
+        content: content,
+        hasPhoto,
+        user: {
+          connectOrCreate: {
+            where: { externalId: userId },
+            create: { externalId: userId },
+          },
+        },
+        rewarded: point,
+        placeId: placeId,
+      },
+    });
+
+    const increasePointOperation = this.prisma.user.upsert({
+      where: { externalId: userId },
+      create: {
+        externalId: userId,
+        point,
+        PointLog: { create: { message, amount: point } },
+      },
+      update: {
+        point: { increment: point },
+        PointLog: { create: { message, amount: point } },
+      },
+    });
+
+    try {
+      await this.prisma.$transaction([
+        createUserOperation,
+        increasePointOperation,
+      ]);
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        throw new BadRequestException(this.prisma.errorCodeMap[error.code]);
+      }
+
+      throw new InternalServerErrorException('unknwon error');
+    }
+  }
+
   async updateReview({
     id,
     message,
     content,
     hasPhoto,
     pointDelta,
-    userId,
   }: UpdateReviewInput) {
     return await this.prisma.review.update({
       where: { externalId: id },
@@ -187,10 +210,6 @@ export class ReviewService {
     });
   }
 
-  async findById(id: string) {
-    return await this.prisma.review.findUnique({ where: { externalId: id } });
-  }
-
   private _composeMessage(operators: ReviewPointOperator[]) {
     return operators
       .map((operator) => this._operatorMessageMap[operator])
@@ -239,57 +258,5 @@ export class ReviewService {
       (prev, curr) => prev + this._operatorPointMap[curr],
       0,
     );
-  }
-
-  async createReview({
-    id,
-    message,
-    content,
-    hasPhoto,
-    userId,
-    placeId,
-    point,
-  }: CreateReviewInput) {
-    const createUserOperation = this.prisma.review.create({
-      data: {
-        externalId: id,
-        content: content,
-        hasPhoto,
-        user: {
-          connectOrCreate: {
-            where: { externalId: userId },
-            create: { externalId: userId },
-          },
-        },
-        rewarded: point,
-        placeId: placeId,
-      },
-    });
-
-    const increasePointOperation = this.prisma.user.upsert({
-      where: { externalId: userId },
-      create: {
-        externalId: userId,
-        point,
-        PointLog: { create: { message, amount: point } },
-      },
-      update: {
-        point: { increment: point },
-        PointLog: { create: { message, amount: point } },
-      },
-    });
-
-    try {
-      await this.prisma.$transaction([
-        createUserOperation,
-        increasePointOperation,
-      ]);
-    } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        throw new BadRequestException(_prismaErrorCodeMap[error.code]);
-      }
-
-      throw new InternalServerErrorException('unknwon error');
-    }
   }
 }
