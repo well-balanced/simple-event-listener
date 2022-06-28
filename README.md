@@ -42,3 +42,5 @@ $ npm run test:cov
 ```
 
 ## 🗄 ERD diagram
+
+![triple](https://user-images.githubusercontent.com/48206623/176199054-05ee58dd-3a79-403c-b0bb-5eb144b4b962.png)
