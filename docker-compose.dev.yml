@@ -4,7 +4,7 @@ services:
   mysql:
     container_name: triple-mysql
     env_file:
-      - .env.development
+      - .env
     image: mysql:5.7
     ports:
       - '3306:3306'
