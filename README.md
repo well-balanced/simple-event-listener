@@ -28,6 +28,7 @@ $ npm run start:dev
 
 
 ## ✅ Test
+> 📌 unit test는 [user.controller.spec.ts](https://github.com/well-balanced/simple-event-listener/blob/main/src/user/user.controller.spec.ts)에서 e2e test는 [app.e2e-spec.ts](https://github.com/well-balanced/simple-event-listener/blob/main/test/app.e2e-spec.ts)에서 확인하실 수 있습니다
 
 ```sh
 $ npm run test
