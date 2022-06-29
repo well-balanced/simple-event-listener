@@ -8,7 +8,7 @@ export class EventService {
   }
 
   isValidReviewEvent(event: ReviewEvent) {
-    if (!event.userId || !event.reviewId || typeof event.content !== 'string') {
+    if (!event.userId || !event.reviewId) {
       return false;
     }
     return true;

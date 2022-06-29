@@ -56,6 +56,10 @@ export class ReviewService {
       throw new BadRequestException('Add event must include placeId');
     }
 
+    if (typeof event.content !== 'string') {
+      throw new BadRequestException('content must be a string type');
+    }
+
     const operators = await this._getAddEventOperators(event);
     const point = this._calculatePoint(operators);
     const message = this._composeMessage(operators);
